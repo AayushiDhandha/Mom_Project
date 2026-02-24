@@ -1,0 +1,175 @@
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Mom_Project.Models;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
+
+namespace Mom_Project.Controllers
+{
+    public class DepartmentController : Controller
+    {
+        #region Department List
+        public ActionResult<List<DepartmentModel>>Index()
+        {
+            List<DepartmentModel> list = new List<DepartmentModel>();
+
+            SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.CommandText = "PR_Department_SelectAll";
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            con.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read()) { 
+                DepartmentModel d = new DepartmentModel();
+                d.DepartmentID = Convert.ToInt32(reader["DepartmentID"]);
+                d.DepartmentName = reader["DepartmentName"].ToString();
+              
+
+                list.Add(d);
+            }
+
+            reader.Close();
+            con.Close();
+
+            return View("DepartmentList",list);
+        }
+        #endregion
+
+        #region Department Add Edit
+        public IActionResult DepartmentAddEdit(int? id)
+        {
+            if (id > 0)
+            {
+                DepartmentModel department = GetDepartmentById(id.Value);
+                return View(department);
+            }
+            else
+            {
+                return View(new DepartmentModel());
+            }
+        }
+        #endregion
+
+        #region Department Delete
+        public IActionResult DeleteDepartment(int id)
+        {
+            try
+            {
+                SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "PR_Department_DeleteByPk";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter p = new SqlParameter();
+                p.ParameterName = "@DepartmentId";
+                p.SqlDbType = SqlDbType.Int;
+                p.Value = id;
+
+                cmd.Parameters.Add(p);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+
+                TempData["Success"] = "Delete Successfully.";
+                return RedirectToAction("Index");
+            }
+            catch(Exception)
+            {
+                TempData["Error"] = "Foreign Key Constraint Violated.";
+                return RedirectToAction("Index");
+            }
+        }
+        #endregion
+
+        #region Get Department By Id
+        public DepartmentModel GetDepartmentById(int id)
+        {
+            DepartmentModel department = new DepartmentModel();
+
+            SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
+
+            SqlCommand cmd = new SqlCommand("PR_Department_SelectByPk", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@DepartmentID", id);
+
+            con.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                department.DepartmentID = Convert.ToInt32(reader["DepartmentID"]);
+                department.DepartmentName = reader["DepartmentName"].ToString();
+            }
+
+            reader.Close();
+            con.Close();
+
+            return department;
+        }
+        #endregion
+
+        #region Save
+        [HttpPost]
+        public IActionResult Save(DepartmentModel model)
+        { 
+            ModelState.Remove("DepartmentName"); 
+            if (string.IsNullOrEmpty(model.DepartmentName)) 
+                                                          
+            { 
+                ModelState.AddModelError("DepartmentName", "Department name can not be null or empty."); 
+            } 
+            try {
+                if (!ModelState.IsValid) { 
+                    return View("DepartmentAddEdit", model); 
+            } 
+                 
+                 SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;"); 
+                SqlCommand cmd = new SqlCommand(); cmd.Connection = con; 
+
+                if (model.DepartmentID == 0) 
+                { 
+                    cmd.CommandText = "PR_Department_Insert";
+                    cmd.Parameters.AddWithValue("@Created", DateTime.Now);
+                    TempData["Success"] = "Department added successfully"; 
+                } 
+                else 
+                { cmd.CommandText = "PR_Department_UpdateByPk"; 
+                    cmd.Parameters.AddWithValue("@DepartmentID", model.DepartmentID); 
+                    TempData["Success"] = "Department updated successfully"; 
+                } 
+              
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                SqlParameter deptName = new SqlParameter();
+                deptName.ParameterName = "@DepartmentName";
+                deptName.SqlDbType = SqlDbType.NVarChar;
+                deptName.Value = model.DepartmentName;
+
+                cmd.Parameters.Add(deptName); 
+                
+                cmd.Parameters.AddWithValue("@Modified", DateTime.Now);
+                
+                con.Open(); 
+                int noOfRows = cmd.ExecuteNonQuery();
+                con.Close(); 
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex) {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }        
+        #endregion
+
+        }
+}

@@ -1,0 +1,119 @@
+﻿@model Mom_Project.Models.StaffModel
+<div class="pagetitle">
+    <h1>Add Staff</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Staff" asp-action="StaffAddEdit">Home</a></li>
+            <li class="breadcrumb-item">Master</li>
+            <li class="breadcrumb-item active">Staff</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+<section class="section">
+    <div class="row">
+        <div class="col">
+
+            <div class="card border-0 shadow-lg rounded-4">
+           
+                    <h5 class="card-header text-white rounded-top-4" style="background: linear-gradient(170deg, #1e3a8a 0%, #2563eb 85%, #3b82f6 100%);">
+                        Add New Staff Member</h5><hr />
+
+                    <div class="card-body p-4">
+                    <!-- Horizontal Form -->
+                    <form asp-action="Save" asp-controller="Staff" method="post">
+                        <input type="hidden" asp-for="StaffID" />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="StaffName" class="form-label fw-semibold">Staff Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input asp-for="StaffName" type="text" class="form-control" placeholder="Enter staff name">
+                                </div>
+                                <span asp-validation-for="StaffName" class="text-danger fw-bold fs-6"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="DepartmentID" class="form-label fw-semibold">Select Department</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-building"></i>
+                                    </span>
+                                    
+                                    <select asp-for="DepartmentID" class="form-select" asp-items="ViewBag.DepartmentList">
+                                        <option selected value="">-- Select Department --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="EmailAddress" class="form-label fw-semibold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                    <input asp-for="EmailAddress" type="email" class="form-control" placeholder="Enter email address">
+                                </div>
+                                <span asp-validation-for="EmailAddress" class="text-danger fw-bold fs-6"></span>
+
+                            </div>      
+
+                            <div class="col-md-6">
+                                <label asp-for="MobileNo" class="form-label fw-semibold">Mobile Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-phone"></i>
+                                    </span>
+                                    <input asp-for="MobileNo" type="text" class="form-control" placeholder="Enter mobile number">
+                                </div>
+                                <span asp-validation-for="MobileNo" class="text-danger fw-bold fs-6"></span>
+                                <br />
+                                <small class="text-muted">Example: +91 98765 43210</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Remarks</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-chat-left-text"></i>
+                                    </span>
+                                    <textarea asp-for="Remarks" class="form-control" rows="3"
+                                              placeholder="Enter any additional remarks (optional)"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                     
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Staff" asp-action="StaffList"
+                               class="btn btn-outline-secondary px-4">
+                                ← Back to List
+                            </a>
+                            <button type="submit" class="btn text-white" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">Create Staff Member</button>
+                        </div>
+                    </form>
+                    <!-- End Horizontal Form -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* modelstate.remove("productname")
+    if(string.isnullempty(productmodel.productname)){
+        modelstate.addmodelerror("Productname","product error")
+    }
+    if(productmodel.price<=0){
+
+    } *@
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
