@@ -20,6 +20,7 @@
 
 <!-- Search Box -->
 <div class="search-card mb-4">
+    <form asp-controller="MeetingType" asp-action="MeetingTypeList" method="post">
     <label class="form-label">Search Meeting Types</label>
 
     <div class="row align-items-center">
@@ -28,17 +29,21 @@
                 <span class="input-group-text bg-white">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="Enter meeting type name...">
-                <button class="btn btn-purple">Search</button>
-                <button class="btn btn-link">Clear</button>
+                    <input type ="text" name="SearchText" id="SearchText" class="form-control"
+                        value="@ViewBag.SearchText" placeholder="Enter meeting type name...">
+                <button type="submit" class="btn btn-purple">Search</button>
+                    <a asp-controller="MeetingType" asp-action="MeetingTypeList" class="btn btn-secondary ms-2">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
             </div>
         </div>
 
         <div class="col-md-4 text-end mt-2 mt-md-0">
             <small class="text-muted">Total Records:</small>
-            <div class="fw-bold">9</div>
+            <div class="fw-bold">@Model.Count</div>
         </div>
     </div>
+    </form>
 </div>
 
 <!-- Table Card -->

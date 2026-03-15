@@ -31,7 +31,10 @@
                 <!-- Card Body -->
                 <div class="card-body p-4">
 
-                    <form asp-action="Save">
+                    <form asp-action="Save" method="post">
+
+                        <input type="hidden" asp-for="MeetingID" />
+
                         <!-- Row 1 -->
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -41,7 +44,7 @@
                                         <i class="bi bi-tag"></i>
                                     </span>
                                     <select asp-for="MeetingTypeID" class="form-select" asp-items="ViewBag.MeetingTypeList">
-                                        <option selected disabled>-- Select Meeting Type --</option>
+                                        <option value="" selected>-- Select Meeting Type --</option>
                                         
                                     </select>
                                 </div>
@@ -54,7 +57,7 @@
                                         <i class="bi bi-building"></i>
                                     </span>
                                     <select asp-for="DepartmentID" asp-items="ViewBag.DepartmentList" class="form-select">
-                                        <option selected disabled>-- Select Department --</option>
+                                        <option selected value="">-- Select Department --</option>
                                     </select>
                                 </div>
                             </div>
@@ -69,7 +72,7 @@
                                         <i class="bi bi-geo-alt"></i>
                                     </span>
                                     <select asp-for="MeetingVenueID" asp-items="ViewBag.MeetingVenueList" class="form-select">
-                                        <option selected disabled>-- Select Venue --</option>
+                                        <option selected value="">-- Select Venue --</option>
                                     </select>
                                 </div>
                             </div>
@@ -80,7 +83,7 @@
                                     <span class="input-group-text bg-light">
                                         <i class="bi bi-calendar"></i>
                                     </span>
-                                    <input type="datetime-local" class="form-control">
+                                    <input asp-for="MeetingDate" type="datetime-local" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -92,7 +95,7 @@
                                 <span class="input-group-text bg-light">
                                     <i class="bi bi-chat-text"></i>
                                 </span>
-                                <textarea class="form-control" rows="3"
+                                <textarea asp-for="MeetingDescription" class="form-control" rows="3"
                                           placeholder="Enter meeting description and agenda"></textarea>
                             </div>
                         </div>
@@ -102,7 +105,7 @@
                             <label class="form-label fw-semibold">
                                 Meeting Document <small class="text-muted">(Optional)</small>
                             </label>
-                            <input type="file" class="form-control">
+                            <input asp-for="DocumentPath" class="form-control" />
                             <small class="text-muted">
                                 Upload meeting agenda, minutes, or related documents
                                 (PDF, DOC, DOCX, TXT – Max 5MB)

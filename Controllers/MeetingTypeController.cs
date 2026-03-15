@@ -16,7 +16,7 @@ namespace Mom_Project.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = con;
-            cmd.CommandText = "PR_MeetingType_SelectAll";
+            cmd.CommandText = "PR_Type";
             cmd.CommandType = CommandType.StoredProcedure;
 
             con.Open();
@@ -63,7 +63,7 @@ namespace Mom_Project.Controllers
 
             SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
 
-            SqlCommand cmd = new SqlCommand("PR_MeetingType_SelectByPk", con);
+            SqlCommand cmd = new SqlCommand("PR_SbyPk", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@MeetingTypeID", id);
 
@@ -94,7 +94,7 @@ namespace Mom_Project.Controllers
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
-                cmd.CommandText = "PR_MeetingType_DeleteByPk";
+                cmd.CommandText = "PR_DbyPk";
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p = new SqlParameter();
@@ -138,13 +138,13 @@ namespace Mom_Project.Controllers
 
                 if (model.MeetingTypeID == 0)
                 {
-                    cmd.CommandText = "PR_MeetingType_Insert";
+                    cmd.CommandText = "PR_In";
                     cmd.Parameters.AddWithValue("@Created", DateTime.Now);
                     TempData["Success"] = "Meeting Type added successfully";
                 }
                 else
                 {
-                    cmd.CommandText = "PR_MeetingType_UpdateByPk";
+                    cmd.CommandText = "PR_UpbyPk";
                     cmd.Parameters.AddWithValue("@MeetingTypeID", model.MeetingTypeID);
                     
                     TempData["Success"] = "Meeting Type updated successfully";
@@ -179,6 +179,60 @@ namespace Mom_Project.Controllers
                 return RedirectToAction("MeetingTypeList");
             }
         }
+        #endregion
+
+        #region Search
+
+        [HttpPost]
+        public IActionResult MeetingTypeList(IFormCollection formData)
+        {
+            string searchText = formData["SearchText"].ToString();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+                searchText = null;
+
+            ViewBag.SearchText = searchText;
+
+            List<MeetingTypeModel> list = GetMeetingType(searchText);
+            return View(list);
+        }
+
+        private List<MeetingTypeModel> GetMeetingType(string searchText)
+        {
+            List<MeetingTypeModel> list = new List<MeetingTypeModel>();
+
+            SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.CommandText = "PR_Type";
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            if (searchText != null)
+                cmd.Parameters.AddWithValue("@SearchText", searchText);
+            else
+                cmd.Parameters.AddWithValue("@SearchText", DBNull.Value);
+
+            con.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                MeetingTypeModel m = new MeetingTypeModel();
+                m.MeetingTypeID = Convert.ToInt32(reader["MeetingTypeID"]);
+                m.MeetingTypeName = reader["MeetingTypeName"].ToString();
+                m.Remarks = reader["Remarks"].ToString();
+
+                list.Add(m);
+            }
+
+            reader.Close();
+            con.Close();
+
+            return list;
+        }
+
         #endregion
     }
 

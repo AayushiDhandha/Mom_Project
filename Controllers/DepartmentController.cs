@@ -13,7 +13,7 @@ namespace Mom_Project.Controllers
         public ActionResult<List<DepartmentModel>>Index()
         {
             List<DepartmentModel> list = new List<DepartmentModel>();
-
+            
             SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
 
             SqlCommand cmd = new SqlCommand();
@@ -168,8 +168,60 @@ namespace Mom_Project.Controllers
                 TempData["Error"] = ex.Message;
                 return RedirectToAction("Index");
             }
-        }        
+        }
         #endregion
 
+        #region Search
+
+        [HttpPost]
+        public IActionResult Index(IFormCollection formData)
+        {
+            string searchText = formData["SearchText"].ToString();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+                searchText = null;
+
+            ViewBag.SearchText = searchText;
+
+            List<DepartmentModel> list = GetDepartments(searchText);
+            return View("DepartmentList", list);
         }
+
+        private List<DepartmentModel> GetDepartments(string searchText)
+        {
+            List<DepartmentModel> list = new List<DepartmentModel>();
+
+            SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.CommandText = "PR_Department_SelectAll";
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            if (searchText != null)
+                cmd.Parameters.AddWithValue("@SearchText", searchText);
+            else
+                cmd.Parameters.AddWithValue("@SearchText", DBNull.Value);
+
+            con.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                DepartmentModel d = new DepartmentModel();
+                d.DepartmentID = Convert.ToInt32(reader["DepartmentID"]);
+                d.DepartmentName = reader["DepartmentName"].ToString();
+
+                list.Add(d);
+            }
+
+            reader.Close();
+            con.Close();
+
+            return list;
+        }
+
+        #endregion
+    }
 }
