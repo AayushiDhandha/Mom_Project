@@ -2,6 +2,8 @@
     Layout = null;
 }
 
+@model Mom_Project.Models.UserLoginModel
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,40 +38,44 @@
                 </p>
             </div>
 
+            <div asp-validation-summary="All" class="text-danger">
             <!-- Form -->
-            <form>
+            <form asp-action="UserLogin" asp-controller="User" method="post">
                 <div class="mb-3 position-relative">
-                    <label class="form-label small">Username</label>
-                    <input type="text" class="form-control custom-input" placeholder="Enter username">
+                    <label for="yourUsername" class="form-label small">Username</label>
+                    <input asp-for="UserName" type="text" id="yourUsername" class="form-control custom-input" placeholder="Enter username">
                     <i class="bi bi-person input-icon"></i>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3 position-relative">
-                    <label class="form-label small">Password</label>
-                    <input type="password" class="form-control custom-input" placeholder="Enter password">
+                        <label for="yourPassword" class="form-label small">Password</label>
+                        <input type="password" asp-for="Password" id="yourPassword" class="form-control custom-input" placeholder="Enter password">
+                            <span asp-validation-for="Password" class="text-danger"></span>
                     <i class="bi bi-lock input-icon"></i>
                     <i class="bi bi-eye password-toggle"></i>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
-                        <label class="form-check-label small">Remember me</label>
+                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                <label class="form-check-label small" for="rememberMe">Remember me</label>
                     </div>
                     <a href="#" class="small text-decoration-none">Forgot password?</a>
                 </div>
 
-                <button asp-controller="Dashboard" asp-action="DashboardPage" class="btn btn-login w-100 mb-3">
+                <button type="submit" class="btn btn-login w-100 mb-3">
                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
                 </button>
 
                 <p class="text-center small mb-0">
                     Don’t have an account?
-                    <a asp-controller="Login" asp-action="RegisterPage" class="fw-semibold text-decoration-none">Create an account</a>
+                    <a class="fw-semibold text-decoration-none">Create an account</a>
                 </p>
             </form>
+            </<div>
         </div>
     </div>
 
 </body>
-</html>
+

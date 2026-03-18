@@ -63,6 +63,7 @@
                     <tr>
                         <th>#</th>
                         <th>Department Name </th>
+                        <th>Image</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -75,6 +76,9 @@
 
                             <td>@department.DepartmentID</td>
                             <td>@department.DepartmentName</td>
+                            <td>
+                                <img src="@Url.Content(department.DepartmentLogo)" width="100" />
+                            </td>
                             <td class="d-flex gap-2 align-items-center">
 
                                 <!-- Edit Button -->

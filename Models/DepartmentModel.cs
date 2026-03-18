@@ -12,6 +12,8 @@ namespace Mom_Project.Models
         [Required(ErrorMessage = "Department name is required.")]
         [StringLength(100, ErrorMessage = "Department name cannot exceed 100 characters")] 
         public string DepartmentName { get; set; }
+        public string DepartmentLogo { get; set; }
+        public IFormFile LogoFile { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DataType(DataType.DateTime)]
@@ -20,6 +22,8 @@ namespace Mom_Project.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DataType(DataType.DateTime)]
         public DateTime Modified { get; set; }
+
+
 
     }
 }
