@@ -151,7 +151,7 @@ namespace Mom_Project.Controllers
                 if (model.DepartmentID == 0) 
                 { 
                    cmd.CommandText = "PR_Department_Insert";
-                   
+                    cmd.Parameters.AddWithValue("@Created", DateTime.Now);
                     TempData["Success"] = "Department added successfully"; 
                 } 
                 else 
@@ -193,10 +193,10 @@ namespace Mom_Project.Controllers
                 cmd.Parameters.AddWithValue("@DepartmentLogo", filePath);
 
 
-                if (model.DepartmentID == 0) // INSERT ONLY
-                {
-                    cmd.Parameters.AddWithValue("@Created", DateTime.Now);  // ✅ correct place
-                }
+                //if (model.DepartmentID == 0) // INSERT ONLY
+                //{
+                //    cmd.Parameters.AddWithValue("@Created", DateTime.Now);  // ✅ correct place
+                //}
 
                 cmd.Parameters.AddWithValue("@Modified", DateTime.Now);
 

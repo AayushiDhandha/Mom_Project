@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Mom_Project.Controllers
 {
@@ -9,23 +10,74 @@ namespace Mom_Project.Controllers
         #region Dashboard Page
         public IActionResult DashboardPage()
         {
-            int meetingTypeCount = 0;
-            int deptcount = 0;
+            // Meeting counts
+            int totalMeetings = 0;
+            int upcomingMeetings = 0;
+            int completedMeetings = 0;
+            int cancelledMeetings = 0;
 
-            using (SqlConnection conn = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;"))
+            // Charts data
+            List<string> typeNames = new List<string>();
+            List<int> typeCounts = new List<int>();
+
+            List<string> deptNames = new List<string>();
+            List<int> deptCounts = new List<int>();
+
+            string connectionString = "Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(MeetingTypeId) FROM MOM_MeetingType", conn);
-                SqlCommand cmd1 = new SqlCommand("Select COUNT(DepartmentId) From MOM_Department", conn);
-                deptcount = (int)cmd.ExecuteScalar();
+                using (SqlCommand cmd = new SqlCommand("PR_Meetings_DashboardCounts", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // 1️⃣ Dashboard counts
+                        if (reader.Read())
+                        {
+                            totalMeetings = Convert.ToInt32(reader["TotalMeetings"]);
+                            upcomingMeetings = Convert.ToInt32(reader["UpcomingMeetings"]);
+                            completedMeetings = Convert.ToInt32(reader["CompletedMeetings"]);
+                            cancelledMeetings = Convert.ToInt32(reader["CancelledMeetings"]);
+                        }
 
-                meetingTypeCount = (int)cmd.ExecuteScalar();
+                        // 2️⃣ Meeting Type chart
+                        if (reader.NextResult())
+                        {
+                            while (reader.Read())
+                            {
+                                typeNames.Add(reader["MeetingTypeName"].ToString());
+                                typeCounts.Add(Convert.ToInt32(reader["Total"]));
+                            }
+                        }
+
+                        // 3️⃣ Department chart
+                        if (reader.NextResult())
+                        {
+                            while (reader.Read())
+                            {
+                                deptNames.Add(reader["DepartmentName"].ToString());
+                                deptCounts.Add(Convert.ToInt32(reader["Total"]));
+                            }
+                        }
+                    }
+                }
             }
 
-            ViewBag.MeetingTypeCount = meetingTypeCount;
-            ViewBag.DepartmentCount = deptcount;
+            // Send data to view
+            ViewBag.TotalMeetings = totalMeetings;
+            ViewBag.UpcomingMeetings = upcomingMeetings;
+            ViewBag.CompletedMeetings = completedMeetings;
+            ViewBag.CancelledMeetings = cancelledMeetings;
+
+            ViewBag.TypeNames = typeNames;
+            ViewBag.TypeCounts = typeCounts;
+
+            ViewBag.DeptNames = deptNames;
+            ViewBag.DeptCounts = deptCounts;
 
             return View();
         }
