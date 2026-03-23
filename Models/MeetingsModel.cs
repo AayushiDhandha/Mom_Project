@@ -41,5 +41,14 @@ namespace Mom_Project.Models
 
         [StringLength(250)]
         public String? CancellationReason { get; set; }
+
+        //join field
+        public string MeetingTypeName { get; set; }
+
+        public string MeetingVenueName { get; set; }
+
+        public string DepartmentName { get; set; }
+
+        public string StaffName { get; set; }
     }
 }

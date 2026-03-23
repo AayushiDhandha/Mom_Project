@@ -38,6 +38,7 @@ namespace Mom_Project.Controllers
                 meetings.DocumentPath = reader["DocumentPath"].ToString();
                 meetings.IsCancelled = reader["IsCancelled"] != DBNull.Value
                        && Convert.ToBoolean(reader["IsCancelled"]);
+                
 
                 meetings.CancellationDateTime = reader["CancellationDateTime"] != DBNull.Value
                                                 ? Convert.ToDateTime(reader["CancellationDateTime"])
@@ -74,6 +75,7 @@ namespace Mom_Project.Controllers
             }
         }
         #endregion
+
 
         #region Get Meetings By Id
         public MeetingsModel GetMeetingsById(int id)
@@ -460,5 +462,7 @@ namespace Mom_Project.Controllers
 
         }
         #endregion
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿<div class="pagetitle mb-4">
+﻿@model List<Mom_Project.Models.AttendanceModel>
+<div class="pagetitle mb-4">
     <h1 class="fw-bold">Attendance Report</h1>
     <p class="text-muted">Generate and export attendance reports</p>
 
@@ -37,9 +38,9 @@
             </div>
 
             <div class="col-md-3">
-                <button class="btn w-100 text-white" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                <a asp-controller="Attendance" asp-action="ExportToExcel" class="btn w-100 text-white" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
                     <i class="bi bi-download me-1"></i> Export
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -90,54 +91,59 @@
 
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-bordered align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Meeting Date</th>
-                        <th>Meeting Type</th>
-                        <th>Meeting Venue</th>
-                        <th>Department</th>
-                        <th>Staff Name</th>
-                        <th>Staff Email</th>
-                        <th>Attendance</th>
-                        <th>Remarks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-12-31 13:13</td>
-                        <td><span class="badge bg-info">Board Meeting</span></td>
-                        <td>Board Room</td>
-                        <td>Finance</td>
-                        <td>David Martinez</td>
-                        <td>david.m@company.com</td>
-                        <td><span class="badge bg-success">Present</span></td>
-                        <td>-</td>
-                    </tr>
-
-                    <tr>
-                        <td>2025-12-31 13:13</td>
-                        <td><span class="badge bg-info">Board Meeting</span></td>
-                        <td>Board Room</td>
-                        <td>Finance</td>
-                        <td>Jennifer Garcia</td>
-                        <td>jennifer.g@company.com</td>
-                        <td><span class="badge bg-danger">Absent</span></td>
-                        <td>-</td>
-                    </tr>
-
-                    <tr>
-                        <td>2025-11-27 10:45</td>
-                        <td><span class="badge bg-info">Brainstorming</span></td>
-                        <td>Training Room 2</td>
-                        <td>Marketing</td>
-                        <td>Lisa Taylor</td>
-                        <td>lisa.t@company.com</td>
-                        <td><span class="badge bg-danger">Absent</span></td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
+            @if (Model != null && Model.Count > 0)
+            {
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Meeting Date</th>
+                            <th>Meeting Type</th>
+                            <th>Meeting Venue</th>
+                            <th>Department</th>
+                            <th>Staff Name</th>
+                            <th>Staff Email</th>
+                            <th>Attendance</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.MeetingDate</td>
+                                <td><span class="badge bg-info">@item.MeetingTypeName</span></td>
+                                <td>@item.MeetingVenueName</td>
+                                <td>@item.DepartmentName</td>
+                                <td>@item.StaffName</td>
+                                <td>@item.EmailAddress</td>
+                                
+                                <td>
+                                    <button onclick="toggleBtn(this)"
+                                            class="btn btn-sm @(item.AttendanceStatus == "Present" ? "btn-success" : "btn-danger")">
+                                        @(item.AttendanceStatus == "Present" ? "Present" : "Absent")
+                                    </button>
+                                </td>
+                                <td>@item.Remarks</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </div>
 </div>
+
+<script>
+    function toggleBtn(btn) {
+        if (btn.innerText === "Present") {
+            btn.innerText = "Absent";
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-danger");
+        } else {
+            btn.innerText = "Present";
+            btn.classList.remove("btn-danger");
+            btn.classList.add("btn-success");
+        }
+    }
+</script>
+
