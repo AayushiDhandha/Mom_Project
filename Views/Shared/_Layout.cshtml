@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Home";
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -61,52 +64,43 @@
 
         <!-- Header Right Nav -->
         <nav class="header-nav ms-auto">
-            <ul class="d-flex align-items-center">
-
-                <!-- Notification -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-bell"></i>
-                        <span class="badge bg-danger badge-number">3</span>
-                    </a>
-                </li>
-
-                <!-- Profile -->
-                <li class="nav-item dropdown pe-3">
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0"
-                       href="#" data-bs-toggle="dropdown">
-                        <div class="logo-icon">
-                            <i class="bi bi-person"></i>
-                        </div>
-                        <span class="d-none d-md-block dropdown-toggle ps-2">Aayushi</span>
-                    </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li class="dropdown-header">
-                            <h6>Aayushi</h6>
-                            <span>Admin</span>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <i class="bi bi-person"></i>
-                                <span>My Profile</span>
-                            </a>
-                        </li>
-
-                        <li>
-                          <form asp-controller="UserLogin" asp-action="Logout" method="post">
-                            <button type="submit" class="dropdown-item d-flex align-items-center">
-                            <i class="bi bi-box-arrow-right"></i>
-                             <span><b>Logout</b></span>
-                               </button>
-                          </form>
-                        </li>
-                    </ul>
-                </li>
-
-            </ul>
+             <ul class="d-flex align-items-center">
+                 <!-- Notification -->
+                 <li class="nav-item dropdown">
+                     <a class="nav-link nav-icon" href="javascript:void(0);" data-bs-toggle="dropdown">
+                     <i class="bi bi-bell"></i>
+                     <span class="badge bg-danger badge-number">3</span>
+                 </a>
+                 </li>
+                 <!-- Profile -->
+                 <li class="nav-item dropdown pe-3">
+                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                         <div class="logo-icon">
+                             <i class="bi bi-person"></i>
+                             </div>
+                             <span class="d-none d-md-block dropdown-toggle ps-2">@ViewBag.UserName</span>
+                     </a>
+                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                         <li class="dropdown-header">
+                             <h6>@ViewBag.UserName</h6>
+                             <span>Admin</span>
+                         </li>
+                         <li><hr class="dropdown-divider"></li>
+                         <li>
+                             <a class="dropdown-item d-flex align-items-center" href="#">
+                                 <i class="bi bi-person"></i>
+                                 <span>My Profile</span>
+                             </a>
+                         </li>
+                         <li>
+                             <a asp-controller="Account" asp-action="Logout" class="dropdown-item d-flex align-items-center">
+                                  <i class="bi bi-box-arrow-right"></i>
+                                  <span><b>Logout</b></span>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+             </ul>
         </nav>
 
     </header>
@@ -225,7 +219,7 @@
 
   <!-- jqury validation -->
     <script src="~/lib/jquery/jquery.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    @* <script src="~/lib/bootstrap/js/bootstrap.js"></script> *@
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 

@@ -1,81 +1,234 @@
-﻿@{
-    Layout = null;
+﻿@model Mom_Project.Models.UserModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-@model Mom_Project.Models.UserLoginModel
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login | MOM System</title>
+    <meta charset="utf-8" />
+    <title>Dashboard</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- YOUR LOGIN CSS -->
-    <link href="~/assets/css/loginStyle.css" rel="stylesheet" />
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+    <style>
+        body {
+        background-color: #f4f6f9;
+        }
 
+        .card {
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        }
+
+        .card h2 {
+        font-weight: bold;
+        }
+
+        .card-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 2rem;
+        opacity: 0.2;
+        }
+
+        canvas {
+        max-height: 350px;
+        }
+
+        /* Scroll for many labels */
+        .chart-container {
+        overflow-x: auto;
+        }
+    </style>
 </head>
+
 <body>
-
-    <div class="login-wrapper">
-        <div class="login-card">
-
-            <!-- Header -->
-            <div class="text-center mb-4">
-                <div class="logo-icon">
-                    <i class="bi bi-check2-square"></i>
-                </div>
-                <h6 class="brand-name">MOM System</h6>
-                <h4 class="fw-bold">Welcome Back</h4>
-                <p class="text-muted small">
-                    Sign in to access your meeting management dashboard
-                </p>
-            </div>
-
-            <div asp-validation-summary="All" class="text-danger">
-            <!-- Form -->
-            <form asp-action="UserLogin" asp-controller="User" method="post">
-                <div class="mb-3 position-relative">
-                    <label for="yourUsername" class="form-label small">Username</label>
-                    <input asp-for="UserName" type="text" id="yourUsername" class="form-control custom-input" placeholder="Enter username">
-                    <i class="bi bi-person input-icon"></i>
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3 position-relative">
-                        <label for="yourPassword" class="form-label small">Password</label>
-                        <input type="password" asp-for="Password" id="yourPassword" class="form-control custom-input" placeholder="Enter password">
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                    <i class="bi bi-lock input-icon"></i>
-                    <i class="bi bi-eye password-toggle"></i>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                <label class="form-check-label small" for="rememberMe">Remember me</label>
-                    </div>
-                    <a href="#" class="small text-decoration-none">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="btn btn-login w-100 mb-3">
-                   <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
-                </button>
-
-                <p class="text-center small mb-0">
-                    Don’t have an account?
-                    <a class="fw-semibold text-decoration-none">Create an account</a>
-                </p>
-            </form>
-            </<div>
-        </div>
+    <div class="alert alert-success">
+        Welcome, @ViewBag.UserName
     </div>
 
-</body>
+    <!-- Page Title -->
+    <div class="mb-3">
+        <h3 class="fw-bold mb-1">Dashboard</h3>
+        <p class="text-muted">Meeting management overview and analytics</p>
+    </div>
 
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-end gap-3 mb-4">
+        <a href="#" class="text-decoration-none text-primary">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </a>
+        <button class="btn btn-success px-3">
+            <i class="bi bi-download me-1"></i> Export Report
+        </button>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="stat-card border-purple">
+                <div class="icon purple">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <h2>@ViewBag.TotalMeetings</h2>
+                <p class="label">TOTAL MEETINGS</p>
+                @* <span class="badge bg-success-subtle text-success">
+                    ↑ 12% from last month
+                </span> *@
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card border-green">
+                <div class="icon green">
+                    <i class="bi bi-plus-square"></i>
+                </div>
+                <h2>@ViewBag.UpcomingMeetings</h2>
+                <p class="label">UPCOMING</p>
+                @* <span class="badge bg-success-subtle text-success">
+                    ↑ 8% from last week
+                </span> *@
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card border-blue">
+                <div class="icon blue">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h2>@ViewBag.CompletedMeetings</h2>
+                <p class="label">COMPLETED</p>
+                @* <span class="badge bg-success-subtle text-success">
+                    ↑ 15% completion rate
+                </span> *@
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card border-orange">
+                <div class="icon orange">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <h2>@ViewBag.CancelledMeetings</h2>
+                <p class="label">CANCELLED</p>
+                @* <span class="badge bg-danger-subtle text-danger">
+                    ↓ 3% cancellation rate
+                </span> *@
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 📊 CHARTS -->
+    <div class="row">
+
+        <div class="col-md-6 mb-3 chart-container">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Meeting Type Chart</h5>
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3 chart-container">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Department Chart</h5>
+                    <canvas id="deptChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔧 SCRIPT SECTION -->
+<script>
+    // Safely parse JSON from ViewBag
+    var typeLabels = @Html.Raw(Json.Serialize(ViewBag.TypeNames ?? new List<string>()));
+    var typeData = @Html.Raw(Json.Serialize(ViewBag.TypeCounts ?? new List<int>()));
+
+    var deptLabels = @Html.Raw(Json.Serialize(ViewBag.DeptNames ?? new List<string>()));
+    var deptData = @Html.Raw(Json.Serialize(ViewBag.DeptCounts ?? new List<int>()));
+
+    // 📊 Bar Chart - Meeting Type
+    new Chart(document.getElementById("typeChart"), {
+    type: 'bar',
+    data: {
+    labels: typeLabels,
+    datasets: [{
+    label: 'Meetings',
+    data: typeData,
+    backgroundColor: '#007bff',
+    borderRadius: 5
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    display: true,
+    position: 'top'
+    },
+    tooltip: {
+    enabled: true,
+    mode: 'index',
+    intersect: false
+    }
+    },
+    scales: {
+    x: { beginAtZero: true },
+    y: { beginAtZero: true }
+    }
+    }
+    });
+
+    // 🥧 Pie Chart - Department
+    new Chart(document.getElementById("deptChart"), {
+    type: 'pie',
+    data: {
+    labels: deptLabels,
+    datasets: [{
+    data: deptData,
+    backgroundColor: [
+    '#ff6384',
+    '#36a2eb',
+    '#ffce56',
+    '#28a745',
+    '#6f42c1',
+    '#fd7e14',
+    '#20c997'
+    ]
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    display: true,
+    position: 'bottom'
+    },
+    tooltip: {
+    enabled: true
+    }
+    }
+    }
+    });
+</script>
+
+</body>
+</html>

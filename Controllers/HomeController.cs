@@ -1,18 +1,98 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Mom_Project.Filters;
 using Mom_Project.Models;
+using System.Data;
+using System.Diagnostics;
 
 namespace Mom_Project.Controllers
 {
 
-    public class HomeController : Controller
-    {
+    
         #region Index
-        public IActionResult Index()
+        [CheckAccess]
+        public class HomeController : Controller
         {
+            public IActionResult Index()
+            {
+
+            // Meeting counts
+            int totalMeetings = 0;
+            int upcomingMeetings = 0;
+            int completedMeetings = 0;
+            int cancelledMeetings = 0;
+
+            // Charts data
+            List<string> typeNames = new List<string>();
+            List<int> typeCounts = new List<int>();
+
+            List<string> deptNames = new List<string>();
+            List<int> deptCounts = new List<int>();
+
+            string connectionString = "Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand("PR_Meetings_DashboardCounts", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // 1️⃣ Dashboard counts
+                        if (reader.Read())
+                        {
+                            totalMeetings = Convert.ToInt32(reader["TotalMeetings"]);
+                            upcomingMeetings = Convert.ToInt32(reader["UpcomingMeetings"]);
+                            completedMeetings = Convert.ToInt32(reader["CompletedMeetings"]);
+                            cancelledMeetings = Convert.ToInt32(reader["CancelledMeetings"]);
+                        }
+
+                        // 2️⃣ Meeting Type chart
+                        if (reader.NextResult())
+                        {
+                            while (reader.Read())
+                            {
+                                typeNames.Add(reader["MeetingTypeName"].ToString());
+                                typeCounts.Add(Convert.ToInt32(reader["Total"]));
+                            }
+                        }
+
+                        // 3️⃣ Department chart
+                        if (reader.NextResult())
+                        {
+                            while (reader.Read())
+                            {
+                                deptNames.Add(reader["DepartmentName"].ToString());
+                                deptCounts.Add(Convert.ToInt32(reader["Total"]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Send data to view
+            ViewBag.TotalMeetings = totalMeetings;
+            ViewBag.UpcomingMeetings = upcomingMeetings;
+            ViewBag.CompletedMeetings = completedMeetings;
+            ViewBag.CancelledMeetings = cancelledMeetings;
+
+            ViewBag.TypeNames = typeNames;
+            ViewBag.TypeCounts = typeCounts;
+
+            ViewBag.DeptNames = deptNames;
+            ViewBag.DeptCounts = deptCounts;
+            ViewBag.UserName = HttpContext.Session.GetString("UserName");
+
             return View();
+            //ViewBag.UserName = HttpContext.Session.GetString("UserName");
+            //ViewBag.Email = HttpContext.Session.GetString("Email");
+            //return View();
+        }
         }
         #endregion
 
-    }
+    
 }
