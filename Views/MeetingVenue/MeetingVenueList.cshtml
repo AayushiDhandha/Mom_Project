@@ -93,22 +93,23 @@
 
                                             <!-- Delete Button -->
                                             <a asp-action="DeleteMeetingVenue"
-                                               asp-route-id="@meetingVenue.MeetingVenueID"
-                                            title="Delete"
-                                            style="
-                                               width:36px;
-                                               height:36px;
-                                               border:1.5px solid #dc3545;
-                                               border-radius:6px;
-                                               display:flex;
-                                               align-items:center;
-                                               justify-content:center;
-                                               color:#dc3545;
-                                               text-decoration:none;
-                                            ">
+                                                   asp-route-id="@meetingVenue.MeetingVenueID"
+                                                   class="delete-link"
+                                                   title="Delete"
+                                                   style="
+                                                width:36px;
+                                                height:36px;
+                                                border:1.5px solid #dc3545;
+                                                border-radius:6px;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                color:#dc3545;
+                                                text-decoration:none;
+                                                ">
                                                 <i class="bi bi-trash"></i>
                                             </a>
-
+                                            
                                         </td>
 
                                     </tr>
@@ -123,6 +124,30 @@
   </div>
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelectorAll('.delete-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const url = this.href;
+
+    Swal.fire({
+    title: 'Are you sure?',
+    text: "This record will be permanently deleted!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+    window.location.href = url;
+    }
+    });
+    });
+    });
+</script>
 
             @if (TempData["Success"] != null)
             {

@@ -2,7 +2,7 @@
 {
     public class AttendanceModel
     {
-        
+        public int MeetingID { get; set; }
         public DateTime MeetingDate { get; set; }
         public string MeetingTypeName { get; set; }
         public string MeetingVenueName { get; set; }

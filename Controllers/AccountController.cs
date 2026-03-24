@@ -121,7 +121,8 @@ namespace Mom_Project.Controllers
                             }
                             else
                             {
-                                ViewBag.ErrorMessage = "Invalid email or password.";
+                                TempData["Error"] = "Invalid email or password.";
+                                //ViewBag.ErrorMessage = "Invalid email or password.";
                             }
                         }
                     }
@@ -131,7 +132,8 @@ namespace Mom_Project.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Error during login: " + ex.Message;
+                TempData["Error"] = "Error during login: " + ex.Message;
+                //ViewBag.ErrorMessage = "Error during login: " + ex.Message;
                 return View(model);
             }
         }
@@ -140,7 +142,11 @@ namespace Mom_Project.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+
+            TempData["SuccessMessage"] = "Logout successful.";
             return RedirectToAction("Login");
+
+
         }
     }
 }

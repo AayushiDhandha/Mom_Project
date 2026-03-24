@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace Mom_Project.Models
@@ -42,13 +42,6 @@ namespace Mom_Project.Models
         [StringLength(250)]
         public String? CancellationReason { get; set; }
 
-        //join field
-        public string MeetingTypeName { get; set; }
-
-        public string MeetingVenueName { get; set; }
-
-        public string DepartmentName { get; set; }
-
-        public string StaffName { get; set; }
+        
     }
 }

@@ -50,7 +50,7 @@
     <div class="col-md-3">
         <div class="card shadow-sm border-0 rounded-4 p-3">
             <small class="text-primary fw-semibold">TOTAL RECORDS</small>
-            <h4 class="fw-bold mt-2">9</h4>
+            <h4 class="fw-bold mt-2">@Model.Count</h4>
         </div>
     </div>
 
@@ -118,11 +118,15 @@
                                 <td>@item.EmailAddress</td>
                                 
                                 <td>
-                                    <button onclick="toggleBtn(this)"
-                                            class="btn btn-sm @(item.AttendanceStatus == "Present" ? "btn-success" : "btn-danger")">
-                                        @(item.AttendanceStatus == "Present" ? "Present" : "Absent")
-                                    </button>
-                                </td>
+                                    <a asp-action="MarkPresent"
+                                       asp-controller="Attendance"
+                                       asp-route-email="@item.EmailAddress"
+                                       asp-route-meetingId="@item.MeetingID"
+       class="btn btn-sm @(item.AttendanceStatus == "Present" ? "btn-success" : "btn-danger")">
+       
+        @(item.AttendanceStatus == "Present" ? "Present" : "Absent")
+    </a>
+</td>
                                 <td>@item.Remarks</td>
                             </tr>
                         }

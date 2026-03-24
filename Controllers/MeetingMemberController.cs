@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Mom_Project.Models;
@@ -12,8 +12,6 @@ namespace Mom_Project.Controllers
         public ActionResult<List<MeetingMemberModel>>MeetingMemberList()
         {
             List<MeetingMemberModel> meetingMemberlist = new List<MeetingMemberModel>();
-            //List<StaffModel> staffList = new List<StaffModel>();
-            //List<MeetingsModel> meetingsList = new List<MeetingsModel>();
 
             SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;");
 
@@ -28,19 +26,12 @@ namespace Mom_Project.Controllers
 
             while (reader.Read()) { 
                 MeetingMemberModel m = new MeetingMemberModel();
-                //StaffModel s = new StaffModel();
-                //MeetingsModel meetings = new MeetingsModel();
-
+                
                 m.MeetingMemberID = Convert.ToInt32(reader["MeetingMemberID"]);
-                //meetings.MeetingDate = Convert.ToDateTime(reader["MeetingDate"]);
-                //s.StaffName = reader["StaffName"].ToString();
                 m.IsPresent = Convert.ToBoolean(reader["IsPresent"]);
                 m.Remarks = reader["Remarks"].ToString();
              
-
                 meetingMemberlist.Add(m);
-                //staffList.Add(s);
-                //meetingsList.Add(meetings);
             }
 
             reader.Close();

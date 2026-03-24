@@ -1,39 +1,63 @@
-﻿@model List<MeetingMemberModel>
+@model List<MeetingMemberModel>
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h2 class="page-title">Meetings Members</h2>
+        <div class="sub-text">Manage Meeting member</div>
+    </div>
 
-<div class="pagetitle">
-    <h1>Meeting Members</h1>
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="MeetingMember" asp-action="MeetingMemberList"><i class="bi bi-house"></i></a></li>
-            <li class="breadcrumb-item active">Meeting Member List</li>
-        </ol>
-    </nav>
-</div><!-- End Page Title -->
+    <div>
+        <a asp-controller="MeetingMember"
+               asp-action="MeetingMemberAddEdit"
+               class="btn text-white" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <i class="bi bi-plus-circle"></i> Add Meeting Member
+        </a>
 
-<section class="section">
-    <div class="row">
-        <div class="col-lg-12">
+        <a asp-controller="MeetingMember" asp-action="ExportToExcel" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel"></i> Export
+        </a>
+    </div>
+</div>
 
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-people-fill"></i>
-                            Meeting Member List
-                        </h5>
+<!-- Search Box -->
+<div class="search-card mb-4">
+    <form asp-controller="MeetingMember" asp-action="MeetingMemberList" method="post">
+        <label class="form-label">Search Meeting Member</label>
 
-                        <a asp-controller="MeetingMember"
-                           asp-action="MeetingMemberAddEdit"
-                           class="btn text-white" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                            <i class="bi bi-plus-lg"></i> Add Members
-                        </a>
-                    </div>
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="SearchText" id="SearchText" class="form-control"
+                           value="@ViewBag.SearchText" placeholder="Enter member name...">
+                    <button type="submit" class="btn btn-purple">Search</button>
+                    <a asp-controller="MeetingMember" asp-action="MeetingMemberList" class="btn btn-secondary ms-2">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
+                </div>
+            </div>
 
+            <div class="col-md-4 text-end mt-2 mt-md-0">
+                <small class="text-muted">Total Records:</small>
+                <div class="fw-bold">@Model.Count</div>
+            </div>
+        </div>
+    </form>
+</div>
 
-                     @if (Model != null && Model.Count > 0)
+<div class="card table-card">
+
+    <div class="table-header-gradient">
+        <i class="bi bi-tag"></i> Meeting Membeer List
+    </div>
+
+    <div class="table-responsive">
+
+                    @if (Model != null && Model.Count > 0)
                     {
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+            <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -46,103 +70,103 @@
 
 
                             <tbody>
-                            @foreach (var meetingMember in Model)
+                                @foreach (var meetingMember in Model)
                                 {
-                                    @* <tr>
-                                        <td>@meetingMember.MeetingMemberID</td>
-                                        <td>@meetingMember.IsPresent</td>
-                                        <td>@meetingMember.Remarks</td>
-                                        @* <td>
-                                            <button class="btn btn-success"
-                                            onclick="toggleAttendance(this)">
-                                                Present
-                                            </button>
-                                        </td> 
-                                             
-                                    </tr> *@
 
                                     <tr>
-
+                                      
                                         <td>@meetingMember.MeetingMemberID</td>
                                         <td>@meetingMember.IsPresent</td>
                                         <td>@meetingMember.Remarks</td>
-                            <td class="d-flex gap-2 align-items-center">
+                                        <td class="d-flex gap-2 align-items-center">
 
-                                <!-- Edit Button -->
-                                            <a asp-action="DeleteMeetingMember"
-                                               asp-route-id="@meetingMember.MeetingMemberID"
-                                   title="Edit"
-                                   style="
-                                                       width:36px;
-                                                       height:36px;
-                                                       border:1.5px solid #0d6efd;
-                                                       border-radius:6px;
-                                                       display:flex;
-                                                       align-items:center;
-                                                       justify-content:center;
-                                                       color:#0d6efd;
-                                                       text-decoration:none;
+                                            <!-- Edit Button -->
+                                            <a asp-action="MeetingMemberAddEdit"
+                                                   asp-route-id="@meetingMember.MeetingMemberID"
+                                                   title="Edit"
+                                                   style="
+                                                width:36px;
+                                                height:36px;
+                                                border:1.5px solid #0d6efd;
+                                                border-radius:6px;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                color:#0d6efd;
+                                                text-decoration:none;
                                                 ">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
 
-                                <!-- Delete Button -->
-                                <a asp-action="DeleteMeetingMember"
-                                   asp-route-id="@meetingMember.MeetingMemberID"
-                                   title="Delete"
-                                   style="
-                                                               width:36px;
-                                                               height:36px;
-                                                               border:1.5px solid #dc3545;
-                                                               border-radius:6px;
-                                                               display:flex;
-                                                               align-items:center;
-                                                               justify-content:center;
-                                                               color:#dc3545;
-                                                               text-decoration:none;
-                                                            ">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                            <!-- Delete Button -->
+                                            <a asp-action="DeleteMeetingMember"
+                                                   asp-route-id="@meetingMember.MeetingMemberID"
+                                                   class="delete-link"
+                                                   title="Delete"
+                                                   style="
+                                                width:36px;
+                                                height:36px;
+                                                border:1.5px solid #dc3545;
+                                                border-radius:6px;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                color:#dc3545;
+                                                text-decoration:none;
+                                                ">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                               
+                                
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                               }
+                                }
                             </tbody>
                         </table>
                     }
-                    <!-- ✅ SCRIPT MUST BE WRITTEN ONLY ONCE -->
-                    <script>
-                        function toggleAttendance(btn) {
-                            if (btn.innerText === "Present") {
-                                btn.innerText = "Absent";
-                                btn.classList.remove("btn-success");
-                                btn.classList.add("btn-danger");
-                            } else {
-                                btn.innerText = "Present";
-                                btn.classList.remove("btn-danger");
-                                btn.classList.add("btn-success");
-                            }
-                        }
-                    </script>
-
+                  
                     <!-- End Table with stripped rows -->
 
                 </div>
             </div>
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.querySelectorAll('.delete-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const url = this.href;
+
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "This record will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                window.location.href = url;
+                }
+                });
+                });
+                });
+            </script>
 
             @if (TempData["Success"] != null)
             {
                 <script>
-                        Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: '@TempData["Success"]',
-                        showConfirmButton: false,
-                        timer: 2000
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '@TempData["Success"]',
+                    showConfirmButton: false,
+                    timer: 2000
                     });
                 </script>
             }
@@ -151,9 +175,9 @@
             {
                 <script>
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Delete Failed',
-                        text: '@TempData["Error"]'
+                    icon: 'error',
+                    title: 'Delete Failed',
+                    text: '@TempData["Error"]'
                     });
                 </script>
             }

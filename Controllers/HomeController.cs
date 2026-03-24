@@ -7,8 +7,6 @@ using System.Diagnostics;
 
 namespace Mom_Project.Controllers
 {
-
-    
         #region Index
         [CheckAccess]
         public class HomeController : Controller
@@ -16,13 +14,11 @@ namespace Mom_Project.Controllers
             public IActionResult Index()
             {
 
-            // Meeting counts
             int totalMeetings = 0;
             int upcomingMeetings = 0;
             int completedMeetings = 0;
             int cancelledMeetings = 0;
 
-            // Charts data
             List<string> typeNames = new List<string>();
             List<int> typeCounts = new List<int>();
 
@@ -41,7 +37,6 @@ namespace Mom_Project.Controllers
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        // 1️⃣ Dashboard counts
                         if (reader.Read())
                         {
                             totalMeetings = Convert.ToInt32(reader["TotalMeetings"]);
@@ -50,7 +45,6 @@ namespace Mom_Project.Controllers
                             cancelledMeetings = Convert.ToInt32(reader["CancelledMeetings"]);
                         }
 
-                        // 2️⃣ Meeting Type chart
                         if (reader.NextResult())
                         {
                             while (reader.Read())
@@ -60,7 +54,6 @@ namespace Mom_Project.Controllers
                             }
                         }
 
-                        // 3️⃣ Department chart
                         if (reader.NextResult())
                         {
                             while (reader.Read())
@@ -73,7 +66,6 @@ namespace Mom_Project.Controllers
                 }
             }
 
-            // Send data to view
             ViewBag.TotalMeetings = totalMeetings;
             ViewBag.UpcomingMeetings = upcomingMeetings;
             ViewBag.CompletedMeetings = completedMeetings;
@@ -87,12 +79,9 @@ namespace Mom_Project.Controllers
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
 
             return View();
-            //ViewBag.UserName = HttpContext.Session.GetString("UserName");
-            //ViewBag.Email = HttpContext.Session.GetString("Email");
-            //return View();
-        }
+        
+            }
         }
         #endregion
 
-    
 }

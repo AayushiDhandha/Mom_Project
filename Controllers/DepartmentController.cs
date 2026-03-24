@@ -9,7 +9,6 @@ using System.Diagnostics.Eventing.Reader;
 using System.Runtime.Intrinsics.X86;
 
 namespace Mom_Project.Controllers 
-
 {
     public class DepartmentController : Controller
     {

@@ -19,7 +19,6 @@ namespace Mom_Project.Controllers
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = con;
 
-            // 👉 Use your stored procedure here
             cmd.CommandText = "PR_Attendance_List";
             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -39,6 +38,7 @@ namespace Mom_Project.Controllers
                 a.EmailAddress = reader["EmailAddress"].ToString();
                 a.AttendanceStatus = reader["Status"].ToString();
                 a.Remarks = reader["Remarks"].ToString();
+                a.MeetingID = Convert.ToInt32(reader["MeetingID"]);
 
                 list.Add(a);
             }
@@ -46,6 +46,25 @@ namespace Mom_Project.Controllers
             con.Close();
 
             return View(list);
+        }
+        #endregion
+
+        #region present absent
+        public IActionResult MarkPresent(string email, int meetingId)
+        {
+            using (SqlConnection con = new SqlConnection("Server=AAYUSHI-DHANDHA\\SQLEXPRESS;Database=DOTNET_PROJECT;Trusted_Connection=True;TrustServerCertificate=True;"))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand("PR_Update_Attendance", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@EmailAddress", email);
+                cmd.Parameters.AddWithValue("@MeetingID", meetingId);
+
+                cmd.ExecuteNonQuery();
+            }
+            return RedirectToAction("AttendanceList");
         }
         #endregion
 

@@ -1,4 +1,4 @@
-﻿@model Mom_Project.Models.MeetingMemberModel
+@model Mom_Project.Models.MeetingMemberModel
 <div class="pagetitle mb-4">
     <h1 class="fw-bold">Edit Meeting Member</h1>
     <p class="text-muted">Update existing Meeting Member</p>
@@ -30,7 +30,7 @@
 
                     <form asp-controller="MeetingMember" asp-action="Save" method="post">
 
-
+                        <input type="hidden" asp-for="MeetingMemberID" />
                         <!-- Department Name -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Meeting Member Name</label>

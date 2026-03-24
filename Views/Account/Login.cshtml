@@ -9,12 +9,12 @@
 @{
     ViewData["Title"] = "Login";
 }
-
+@* 
 
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
+} *@
 
 @if (ViewBag.ErrorMessage != null)
 {
@@ -92,6 +92,33 @@
 
                     </<div>
                 </div>
+
+                
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <script>
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: '@TempData["SuccessMessage"]',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                    </script>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <script>
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Something went wrong',
+                                            text: '@TempData["Error"]'
+                                        });
+                    </script>
+                }
             </div>
 
         </body>

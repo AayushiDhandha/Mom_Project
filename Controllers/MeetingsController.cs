@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -160,7 +160,9 @@ namespace Mom_Project.Controllers
 
                 if (!ModelState.IsValid)
                 {
+                    ViewBag.MeetingTypeList = FillMeetingTypeDropDown();
                     ViewBag.DepartmentList = FillDepartmentDropDown();
+                    ViewBag.MeetingVenueList = FillMeetingVenueDropDown();
                     return View("MeetingsAddEdit", model);
                 }
 
