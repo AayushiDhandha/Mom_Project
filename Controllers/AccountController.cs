@@ -122,7 +122,7 @@ namespace Mom_Project.Controllers
                             else
                             {
                                 TempData["Error"] = "Invalid email or password.";
-                                //ViewBag.ErrorMessage = "Invalid email or password.";
+                                
                             }
                         }
                     }
@@ -133,7 +133,7 @@ namespace Mom_Project.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = "Error during login: " + ex.Message;
-                //ViewBag.ErrorMessage = "Error during login: " + ex.Message;
+            
                 return View(model);
             }
         }
