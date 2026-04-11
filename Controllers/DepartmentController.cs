@@ -192,12 +192,6 @@ namespace Mom_Project.Controllers
                 cmd.Parameters.AddWithValue("@DepartmentName", model.DepartmentName);
                 cmd.Parameters.AddWithValue("@DepartmentLogo", filePath);
 
-
-                //if (model.DepartmentID == 0) // INSERT ONLY
-                //{
-                //    cmd.Parameters.AddWithValue("@Created", DateTime.Now);  // ✅ correct place
-                //}
-
                 cmd.Parameters.AddWithValue("@Modified", DateTime.Now);
 
                 con.Open(); 
